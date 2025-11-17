@@ -14,7 +14,7 @@ public class CafeService {
         this.cafeRepository = cafeRepository;
     }
 
-    public Cafe createCafe(CafeRequestDto dto) {
+    /* public Cafe createCafe(CafeRequestDto dto) {
         Cafe cafe = Cafe.builder()
                 .name(dto.getName())
                 .address(dto.getAddress())
@@ -25,6 +25,8 @@ public class CafeService {
                 .build();
         return cafeRepository.save(cafe);
     }
+
+     */
 
     public Cafe updateCafe(CafeRequestDto dto) {
         Optional<Cafe> optionalCafe = cafeRepository.findById(dto.getCafe_id());
