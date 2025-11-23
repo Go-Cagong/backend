@@ -2,12 +2,12 @@ package com.inu.go_cagong.admin.service;
 
 import com.inu.go_cagong.admin.entity.Bookmark;
 import com.inu.go_cagong.admin.entity.Cafe;
-import com.inu.go_cagong.admin.entity.Review;
-import com.inu.go_cagong.admin.entity.User;
 import com.inu.go_cagong.admin.repository.BookmarkRepository;
 import com.inu.go_cagong.admin.repository.CafeRepository;
-import com.inu.go_cagong.admin.repository.ReviewRepository;
-import com.inu.go_cagong.admin.repository.UserRepository;
+import com.inu.go_cagong.auth.entity.User;
+import com.inu.go_cagong.auth.repository.UserRepository;
+import com.inu.go_cagong.review.entity.Review;
+import com.inu.go_cagong.review.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,7 +56,7 @@ public class MyPageService {
         // [수정됨] Map.<String, Object>of 사용 + getCafe_id() 사용
         List<Map<String, Object>> reviewList = reviews.stream().map(review -> Map.<String, Object>of(
                 "review_id", review.getReviewId(),
-                "cafe_id", review.getCafe().getCafe_id(), // Cafe 엔티티의 필드명(cafe_id)에 맞춤
+                "cafe_id", review.getCafe().getCafeId(), // Cafe 엔티티의 필드명(cafe_id)에 맞춤
                 "cafe_name", review.getCafe().getName(),
                 "rating", review.getRating(),
                 "content", review.getContent()
@@ -81,7 +81,7 @@ public class MyPageService {
         // [수정됨] Map.<String, Object>of 사용 + getCafe_id() 사용
         List<Map<String, Object>> bookmarkList = bookmarks.stream().map(bookmark -> Map.<String, Object>of(
                 "bookmark_id", bookmark.getBookmarkId(),
-                "cafe_id", bookmark.getCafe().getCafe_id(),
+                "cafe_id", bookmark.getCafe().getCafeId(),
                 "cafe_name", bookmark.getCafe().getName(),
                 "address", bookmark.getCafe().getAddress()
         )).collect(Collectors.toList());

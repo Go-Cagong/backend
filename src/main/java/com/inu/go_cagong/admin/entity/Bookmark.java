@@ -1,5 +1,6 @@
 package com.inu.go_cagong.admin.entity;
 
+import com.inu.go_cagong.auth.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

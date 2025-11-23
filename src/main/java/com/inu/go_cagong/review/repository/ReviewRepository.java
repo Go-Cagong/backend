@@ -1,5 +1,6 @@
 package com.inu.go_cagong.review.repository;
 
+import com.inu.go_cagong.auth.entity.User;
 import com.inu.go_cagong.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 특정 카페의 리뷰 개수
     Long countByCafe_CafeId(Long cafeId);
+
+    List<Review> findAllByUser(User user);
 }
