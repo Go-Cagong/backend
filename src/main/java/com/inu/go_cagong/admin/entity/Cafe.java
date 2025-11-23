@@ -54,6 +54,11 @@ public class Cafe {
     @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<CafePhoto> photos = new ArrayList<>();
+
+    // Cafe : Review = 1 : N 관계
+    @OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<com.inu.go_cagong.review.entity.Review> reviews = new ArrayList<>();
     
     // 편의 메서드: 사진 추가
     public void addPhoto(CafePhoto photo) {

@@ -36,12 +36,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             Long userId = Long.valueOf(claims.getSubject());
             String email = claims.get("email", String.class);
 
-            // 인증 객체 생성
+            // CustomUserDetails로 인증 객체 생성
+            CustomUserDetails userDetails = new CustomUserDetails(userId, email);
+
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            email,      // Principal
-                            null,       // Credentials(비밀번호 없음)
-                            null        // Authorities(권한 나중에 필요시 추가)
+                            userDetails,  // Principal (CustomUserDetails)
+                            null,         // Credentials
+                            userDetails.getAuthorities()  // Authorities
                     );
 
             authentication.setDetails(
