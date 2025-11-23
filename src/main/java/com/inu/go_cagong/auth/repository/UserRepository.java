@@ -1,6 +1,6 @@
-package com.inu.go_cagong.repository;
+package com.inu.go_cagong.auth.repository;
 
-import com.inu.go_cagong.entity.User;
+import com.inu.go_cagong.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

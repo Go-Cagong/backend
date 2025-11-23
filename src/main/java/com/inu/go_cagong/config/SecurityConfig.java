@@ -35,7 +35,10 @@ public class SecurityConfig {
                                 "/",
                                 "/oauth2/**",
                                 "/api/auth/refresh",
-                                "/api/auth/logout"
+                                "/api/auth/logout",
+                                "/api/**",
+                                "/admin/**",
+                                "/cafe-api-test.html"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

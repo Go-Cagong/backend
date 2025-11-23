@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>고카공 카페 API 테스트</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .api-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .api-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .response {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .response h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .response pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .success {
+            border-color: #4caf50;
+        }
+
+        .error {
+            border-color: #f44336;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .badge-post { background: #4caf50; color: white; }
+        .badge-get { background: #2196f3; color: white; }
+        .badge-delete { background: #f44336; color: white; }
+
+        /* 이미지 미리보기 */
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .image-preview {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 카페 목록 카드 */
+        .cafe-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .cafe-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        /* 카페 이미지 그리드 */
+        .cafe-images {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .cafe-image {
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+        }
+
+        .cafe-image img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        /* 이미지 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .modal .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>☕ 고카공 카페 API 테스트</h1>
+
+    <!-- 1. 카페 등록 -->
+    <div class="api-section">
+        <h2><span class="badge badge-post">POST</span> 카페 등록</h2>
+        <form id="createCafeForm">
+            <div class="grid">
+                <div class="form-group">
+                    <label>카페 이름 *</label>
+                    <input type="text" name="name" required placeholder="예: 카페 꼼마 송도점">
+                </div>
+                <div class="form-group">
+                    <label>전화번호</label>
+                    <input type="text" name="tel" placeholder="032-123-4567">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>주소 *</label>
+                <input type="text" name="address" required placeholder="인천 연수구 센트럴로 263">
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label>위도 *</label>
+                    <input type="number" name="latitude" step="any" required placeholder="37.398306">
+                </div>
+                <div class="form-group">
+                    <label>경도 *</label>
+                    <input type="number" name="longitude" step="any" required placeholder="126.633733">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>설명</label>
+                <textarea name="description" placeholder="카페에 대한 설명을 입력하세요"></textarea>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label>아메리카노 가격</label>
+                    <input type="number" name="americanoPrice" placeholder="5300">
+                </div>
+                <div class="form-group">
+                    <label>영업시간</label>
+                    <input type="text" name="businessHours" placeholder="10:00 - 22:00">
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="form-group">
+                    <label>분위기</label>
+                    <select name="mood">
+                        <option value="">선택하세요</option>
+                        <option value="조용함">조용함</option>
+                        <option value="활기찬">활기찬</option>
+                        <option value="편안함">편안함</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>주차 가능 여부</label>
+                    <select name="hasParking">
+                        <option value="">선택하세요</option>
+                        <option value="true">가능</option>
+                        <option value="false">불가능</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>AI 요약</label>
+                <textarea name="aiSummary" placeholder="AI가 생성한 요약 정보"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>이미지 (여러 장 가능)</label>
+                <input type="file" id="imageInput" name="images" multiple accept="image/*">
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
+            </div>
+
+            <button type="submit">카페 등록</button>
+        </form>
+        <div id="createResponse" class="response" style="display:none;">
+            <h3>응답:</h3>
+            <pre></pre>
+        </div>
+    </div>
+
+    <!-- 2. 전체 카페 조회 -->
+    <div class="api-section">
+        <h2><span class="badge badge-get">GET</span> 전체 카페 위치 조회</h2>
+        <button onclick="getAllCafes()">전체 카페 조회</button>
+        <div id="listResponse" class="response" style="display:none;">
+            <h3>응답:</h3>
+            <div id="cafeList"></div>
+        </div>
+    </div>
+
+    <!-- 3. 카페 상세 조회 -->
+    <div class="api-section">
+        <h2><span class="badge badge-get">GET</span> 카페 상세 정보 조회</h2>
+        <div class="form-group">
+            <label>카페 ID</label>
+            <input type="number" id="detailCafeId" placeholder="1">
+        </div>
+        <button onclick="getCafeDetail()">상세 정보 조회</button>
+        <div id="detailResponse" class="response" style="display:none;">
+            <h3>응답:</h3>
+            <div id="cafeDetail"></div>
+        </div>
+    </div>
+
+    <!-- 4. 카페 삭제 -->
+    <div class="api-section">
+        <h2><span class="badge badge-delete">DELETE</span> 카페 삭제</h2>
+        <div class="form-group">
+            <label>카페 ID</label>
+            <input type="number" id="deleteCafeId" placeholder="1">
+        </div>
+        <button onclick="deleteCafe()">카페 삭제</button>
+        <div id="deleteResponse" class="response" style="display:none;">
+            <h3>응답:</h3>
+            <pre></pre>
+        </div>
+    </div>
+</div>
+
+<!-- 이미지 모달 -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+<script>
+    const API_BASE_URL = 'http://localhost:8080/api';
+    let selectedFiles = [];
+
+    // 이미지 미리보기
+    document.getElementById('imageInput').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        selectedFiles = files;
+        displayImagePreviews();
+    });
+
+    function displayImagePreviews() {
+        const container = document.getElementById('imagePreviewContainer');
+        container.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'image-preview';
+                previewDiv.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button class="remove-btn" onclick="removeImage(${index})" type="button">×</button>
+                    `;
+                container.appendChild(previewDiv);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeImage(index) {
+        selectedFiles.splice(index, 1);
+        displayImagePreviews();
+
+        // 파일 input 업데이트
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        document.getElementById('imageInput').files = dataTransfer.files;
+    }
+
+    // 1. 카페 등록
+    document.getElementById('createCafeForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/cafe`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            showResponse('createResponse', data, response.ok);
+
+            if (response.ok) {
+                e.target.reset();
+                selectedFiles = [];
+                document.getElementById('imagePreviewContainer').innerHTML = '';
+                alert('카페가 등록되었습니다!');
+            }
+        } catch (error) {
+            showResponse('createResponse', { error: error.message }, false);
+        }
+    });
+
+    // 2. 전체 카페 조회
+    async function getAllCafes() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/cafe`);
+            const data = await response.json();
+
+            if (response.ok) {
+                displayCafeList(data);
+            } else {
+                showResponse('listResponse', data, false);
+            }
+        } catch (error) {
+            showResponse('listResponse', { error: error.message }, false);
+        }
+    }
+
+    function displayCafeList(data) {
+        const container = document.getElementById('cafeList');
+        container.innerHTML = '';
+
+        if (data.cafes && data.cafes.length > 0) {
+            data.cafes.forEach(cafe => {
+                const card = document.createElement('div');
+                card.className = 'cafe-card';
+                card.innerHTML = `
+                        <h4>${cafe.name}</h4>
+                        <p><strong>주소:</strong> ${cafe.address || 'N/A'}</p>
+                        <p><strong>위치:</strong> ${cafe.latitude}, ${cafe.longitude}</p>
+                        <p><strong>분위기:</strong> ${cafe.mood || 'N/A'}</p>
+                        <p><strong>아메리카노:</strong> ${cafe.americanoPrice ? cafe.americanoPrice + '원' : 'N/A'}</p>
+                        <p><strong>주차:</strong> ${cafe.hasParking ? '가능' : '불가능'}</p>
+                    `;
+                container.appendChild(card);
+            });
+        } else {
+            container.innerHTML = '<p>등록된 카페가 없습니다.</p>';
+        }
+
+        document.getElementById('listResponse').style.display = 'block';
+        document.getElementById('listResponse').className = 'response success';
+    }
+
+    // 3. 카페 상세 조회
+    async function getCafeDetail() {
+        const cafeId = document.getElementById('detailCafeId').value;
+
+        if (!cafeId) {
+            alert('카페 ID를 입력하세요!');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                displayCafeDetail(data);
+            } else {
+                showResponse('detailResponse', data, false);
+            }
+        } catch (error) {
+            showResponse('detailResponse', { error: error.message }, false);
+        }
+    }
+
+    function displayCafeDetail(cafe) {
+        const container = document.getElementById('cafeDetail');
+        container.innerHTML = `
+                <div class="cafe-card">
+                    <h4>${cafe.name}</h4>
+                    <p><strong>주소:</strong> ${cafe.address}</p>
+                    <p><strong>설명:</strong> ${cafe.description || 'N/A'}</p>
+                    <p><strong>전화번호:</strong> ${cafe.tel || 'N/A'}</p>
+                    <p><strong>영업시간:</strong> ${cafe.businessHours}</p>
+                    <p><strong>아메리카노 가격:</strong> ${cafe.americanoPrice}원</p>
+                    <p><strong>분위기:</strong> ${cafe.mood}</p>
+                    <p><strong>주차:</strong> ${cafe.hasParking ? '가능' : '불가능'}</p>
+                    <p><strong>AI 요약:</strong> ${cafe.aiSummary || 'N/A'}</p>
+                    <p><strong>리뷰 평균:</strong> ${cafe.reviewAverage} (${cafe.reviewCount}개)</p>
+
+                    ${cafe.images && cafe.images.length > 0 ? `
+                        <h5 style="margin-top: 15px;">이미지:</h5>
+                        <div class="cafe-images">
+                            ${cafe.images.map(img => `
+                                <div class="cafe-image" onclick="openModal('${img}')">
+                                    <img src="${img}" alt="카페 이미지">
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '<p>등록된 이미지가 없습니다.</p>'}
+                </div>
+            `;
+
+        document.getElementById('detailResponse').style.display = 'block';
+        document.getElementById('detailResponse').className = 'response success';
+    }
+
+    // 이미지 모달
+    function openModal(imgSrc) {
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        modal.style.display = 'block';
+        modalImg.src = imgSrc;
+    }
+
+    function closeModal() {
+        document.getElementById('imageModal').style.display = 'none';
+    }
+
+    // 4. 카페 삭제
+    async function deleteCafe() {
+        const cafeId = document.getElementById('deleteCafeId').value;
+
+        if (!cafeId) {
+            alert('카페 ID를 입력하세요!');
+            return;
+        }
+
+        if (!confirm('정말 삭제하시겠습니까?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/admin/cafe/${cafeId}`, {
+                method: 'DELETE'
+            });
+
+            const data = await response.text();
+            showResponse('deleteResponse', data, response.ok);
+
+            if (response.ok) {
+                alert('카페가 삭제되었습니다!');
+            }
+        } catch (error) {
+            showResponse('deleteResponse', { error: error.message }, false);
+        }
+    }
+
+    // 응답 표시 함수
+    function showResponse(elementId, data, isSuccess) {
+        const element = document.getElementById(elementId);
+        const pre = element.querySelector('pre');
+
+        if (pre) {
+            pre.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+        }
+        element.style.display = 'block';
+        element.className = isSuccess ? 'response success' : 'response error';
+    }
+</script>
+</body>
+</html>

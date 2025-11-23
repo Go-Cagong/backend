@@ -3,8 +3,8 @@ package com.inu.go_cagong.auth.controller;
 
 import com.inu.go_cagong.auth.jwt.CookieUtil;
 import com.inu.go_cagong.auth.jwt.JwtProvider;
-import com.inu.go_cagong.entity.User;
-import com.inu.go_cagong.repository.UserRepository;
+import com.inu.go_cagong.auth.entity.User;
+import com.inu.go_cagong.auth.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

@@ -1,4 +1,4 @@
-package com.inu.go_cagong.entity;
+package com.inu.go_cagong.auth.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

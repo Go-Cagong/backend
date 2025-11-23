@@ -1,17 +1,30 @@
 package com.inu.go_cagong.admin.entity;
 
+import jakarta.persistence.*;
+import lombok.*;
 
-import jakarta.persistence.Id;
-
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "cafe_photo")
 public class CafePhoto {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cafe_id", nullable = false)
     private Cafe cafe;
 
-    private String imageUrl;
+    @Column(nullable = false)
+    private String imageUrl;  // S3 URL
 
-    private boolean isMain;
-    private Integer sortOrder;
+    @Column(nullable = false)
+    private Boolean isMain;  // 대표 이미지 여부
+
+    private Integer sortOrder;  // 정렬 순서
 }

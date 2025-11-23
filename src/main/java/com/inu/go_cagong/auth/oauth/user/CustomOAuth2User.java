@@ -1,6 +1,6 @@
 package com.inu.go_cagong.auth.oauth.user;
 
-import com.inu.go_cagong.entity.User;
+import com.inu.go_cagong.auth.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
