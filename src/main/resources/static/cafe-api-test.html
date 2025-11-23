@@ -334,6 +334,8 @@
         </div>
         <div>
             <button onclick="loginWithKakao()">카카오 로그인</button>
+            <button onclick="loginWithGoogle()">구글 로그인</button>
+            <button onclick="loginWithNaver()">네이버 로그인</button>
             <button onclick="logout()">로그아웃</button>
         </div>
     </div>
@@ -598,6 +600,19 @@
     function loginWithKakao() {
         window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
     }
+
+    // 구글 로그인
+    function loginWithGoogle() {
+        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    }
+
+    // 네이버 로그인
+    function loginWithNaver() {
+        window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+    }
+
+
+
 
     // 로그아웃
     function logout() {

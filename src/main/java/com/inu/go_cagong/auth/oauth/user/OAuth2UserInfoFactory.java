@@ -14,6 +14,10 @@ public class OAuth2UserInfoFactory {
             return new GoogleOAuth2UserInfo(attributes);
         }
 
+        if (provider.equals("naver")) {
+            return new NaverOAuth2UserInfo(attributes);
+        }
+
         throw new IllegalArgumentException("지원하지 않는 provider: " + provider);
     }
 }
