@@ -2,7 +2,7 @@ package com.inu.go_cagong.admin.repository;
 
 import com.inu.go_cagong.admin.entity.Bookmark;
 import com.inu.go_cagong.admin.entity.Cafe;
-import com.inu.go_cagong.admin.entity.User;
+import com.inu.go_cagong.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
