@@ -20,7 +20,7 @@ public class CafePhoto {
     @JoinColumn(name = "cafe_id", nullable = false)
     private Cafe cafe;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1024)
     private String imageUrl;  // S3 URL
 
     @Column(nullable = false)
