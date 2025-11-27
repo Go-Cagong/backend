@@ -17,7 +17,7 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     // 저장 취소 (삭제) - 유저와 카페 정보로 삭제
     void deleteByUserAndCafe(User user, Cafe cafe);
 
-    // 새롭게 추가
+    // 새롭게 추가 X
     // 설명: "유저번호(userId)랑 카페번호(cafeId)만 주면 저장 여부(true/false) 알려줌"
-    boolean existsByUser_UserIdAndCafe_CafeId(Long userId, Long cafeId);
+//    boolean existsByUser_UserIdAndCafe_CafeId(Long userId, Long cafeId);
 }
