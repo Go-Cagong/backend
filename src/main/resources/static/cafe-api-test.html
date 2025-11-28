@@ -5,328 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Go-Cagong API 전체 테스트</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .tab-button {
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .tab-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .tab-button.active {
-            background: white;
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 1.5em;
-            color: #667eea;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #667eea;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        input[type="file"],
-        textarea,
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border 0.3s;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-            margin-right: 10px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .response {
-            margin-top: 20px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-        }
-
-        .response.success {
-            border-left-color: #4caf50;
-            background: #e8f5e9;
-        }
-
-        .response.error {
-            border-left-color: #f44336;
-            background: #ffebee;
-        }
-
-        .response-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-
-        pre {
-            background: #2d2d2d;
-            color: #f8f8f2;
-            padding: 15px;
-            border-radius: 8px;
-            overflow-x: auto;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .image-preview {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .image-preview-item {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .image-preview-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .image-preview-item button {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: rgba(244, 67, 54, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 0;
-            line-height: 1;
-        }
-
-        .auth-status {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .auth-status.logged-in {
-            border-left: 4px solid #4caf50;
-        }
-
-        .auth-status.logged-out {
-            border-left: 4px solid #f44336;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .info-box {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            border-left: 4px solid #2196f3;
-            margin-bottom: 20px;
-        }
-
-        .cafe-card {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .cafe-card h4 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .review-card {
-            background: #fff;
-            border: 1px solid #e0e0e0;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .review-card .rating {
-            color: #ffc107;
-            font-size: 18px;
-        }
-
-        .review-images {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .review-images img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-        }
-
-        .modal.active {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 8px;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-        }
+        /* 스타일 (기존과 동일) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        h1 { text-align: center; color: white; margin-bottom: 30px; font-size: 2.5em; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-button { padding: 12px 24px; background: rgba(255, 255, 255, 0.2); border: none; color: white; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; }
+        .tab-button:hover { background: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+        .tab-button.active { background: white; color: #667eea; font-weight: bold; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .section-title { font-size: 1.5em; color: #667eea; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 3px solid #667eea; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #555; font-weight: 600; }
+        input[type="text"], input[type="number"], input[type="file"], textarea, select { width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: border 0.3s; }
+        input:focus, textarea:focus, select:focus { outline: none; border-color: #667eea; }
+        textarea { min-height: 100px; resize: vertical; }
+        button { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; transition: all 0.3s; margin-right: 10px; margin-bottom: 10px; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4); }
+        .response { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #667eea; word-break: break-all; }
+        .response.success { border-left-color: #4caf50; background: #e8f5e9; }
+        .response.error { border-left-color: #f44336; background: #ffebee; }
+        .response-title { font-weight: bold; margin-bottom: 10px; color: #333; }
+        pre { background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 8px; overflow-x: auto; font-size: 13px; line-height: 1.5; }
+        .image-preview { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .image-preview-item { position: relative; width: 150px; height: 150px; border: 2px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
+        .image-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+        .image-preview-item button { position: absolute; top: 5px; right: 5px; background: rgba(244, 67, 54, 0.9); color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; padding: 0; line-height: 1; }
+        .auth-status { background: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .auth-status.logged-in { border-left: 4px solid #4caf50; }
+        .auth-status.logged-out { border-left: 4px solid #f44336; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+        .info-box { background: #e3f2fd; padding: 15px; border-radius: 8px; border-left: 4px solid #2196f3; margin-bottom: 20px; }
+        .cafe-card, .review-card { background: #f5f5f5; padding: 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e0e0e0; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal img { max-width: 90%; max-height: 90%; border-radius: 8px; }
+        .modal-close { position: absolute; top: 20px; right: 40px; color: white; font-size: 40px; cursor: pointer; }
+        .status-badge { display: inline-block; padding: 5px 10px; border-radius: 15px; font-size: 0.9em; font-weight: bold; }
+        .status-true { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .status-false { background: #ffebee; color: #c62828; border: 1px solid #ffcdd2; }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>🏪 Go-Cagong API 전체 테스트</h1>
 
-    <!-- 인증 상태 -->
     <div id="authStatus" class="auth-status logged-out">
         <div>
             <strong>인증 상태:</strong> <span id="authStatusText">로그아웃</span>
@@ -340,16 +67,14 @@
         </div>
     </div>
 
-    <!-- 탭 버튼 -->
     <div class="tabs">
         <button class="tab-button active" onclick="switchTab('cafe')">☕ 카페 관리</button>
         <button class="tab-button" onclick="switchTab('review')">⭐ 리뷰 관리</button>
         <button class="tab-button" onclick="switchTab('myreview')">📝 내 리뷰</button>
+        <button class="tab-button" onclick="switchTab('mypage')">👤 마이페이지</button>
     </div>
 
-    <!-- 카페 관리 탭 -->
     <div id="cafe-tab" class="tab-content active">
-        <!-- 카페 등록 -->
         <div class="card">
             <h2 class="section-title">카페 등록</h2>
             <div class="info-box">
@@ -391,9 +116,9 @@
                     <input type="number" id="cafeAmericanoPrice" placeholder="5000">
                 </div>
                 <div class="form-group">
-                <label>Ai요약</label>
-                <input type="text" id="cafeAiSummary" placeholder="5000">
-            </div>
+                    <label>Ai요약</label>
+                    <input type="text" id="cafeAiSummary" placeholder="한줄 요약">
+                </div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
@@ -421,7 +146,6 @@
             <div id="createCafeResponse" class="response" style="display:none;"></div>
         </div>
 
-        <!-- 카페 조회 -->
         <div class="card">
             <h2 class="section-title">카페 조회</h2>
             <button onclick="getAllCafes()">전체 카페 조회</button>
@@ -430,12 +154,8 @@
             <div id="cafeListResponse" class="response" style="display:none;"></div>
         </div>
 
-        <!-- 카페 삭제 -->
         <div class="card">
             <h2 class="section-title">카페 삭제</h2>
-            <div class="info-box">
-                <strong>⚠️ 관리자 전용:</strong> 카페 삭제는 관리자 권한이 필요합니다.
-            </div>
             <div class="form-group">
                 <label>카페 ID</label>
                 <input type="number" id="deleteCafeId" placeholder="삭제할 카페 ID">
@@ -445,14 +165,9 @@
         </div>
     </div>
 
-    <!-- 리뷰 관리 탭 -->
     <div id="review-tab" class="tab-content">
-        <!-- 리뷰 작성 -->
         <div class="card">
             <h2 class="section-title">리뷰 작성</h2>
-            <div class="info-box">
-                <strong>🔐 로그인 필요:</strong> 리뷰 작성은 로그인이 필요합니다.
-            </div>
             <div class="form-group">
                 <label>카페 ID *</label>
                 <input type="number" id="reviewCafeId" placeholder="리뷰를 작성할 카페 ID">
@@ -480,7 +195,6 @@
             <div id="createReviewResponse" class="response" style="display:none;"></div>
         </div>
 
-        <!-- 리뷰 조회 -->
         <div class="card">
             <h2 class="section-title">카페별 리뷰 조회</h2>
             <div class="form-group">
@@ -491,12 +205,8 @@
             <div id="reviewListResponse" class="response" style="display:none;"></div>
         </div>
 
-        <!-- 리뷰 수정 -->
         <div class="card">
             <h2 class="section-title">리뷰 수정</h2>
-            <div class="info-box">
-                <strong>🔐 본인 확인:</strong> 본인이 작성한 리뷰만 수정할 수 있습니다.
-            </div>
             <div class="form-group">
                 <label>리뷰 ID *</label>
                 <input type="number" id="updateReviewId" placeholder="수정할 리뷰 ID">
@@ -514,7 +224,7 @@
             </div>
             <div class="form-group">
                 <label>리뷰 내용</label>
-                <textarea id="updateReviewContent" placeholder="새로운 리뷰 내용 (비워두면 변경 안 함)"></textarea>
+                <textarea id="updateReviewContent" placeholder="새로운 리뷰 내용"></textarea>
             </div>
             <div class="form-group">
                 <label>새 이미지 추가</label>
@@ -524,12 +234,8 @@
             <div id="updateReviewResponse" class="response" style="display:none;"></div>
         </div>
 
-        <!-- 리뷰 삭제 -->
         <div class="card">
             <h2 class="section-title">리뷰 삭제</h2>
-            <div class="info-box">
-                <strong>🔐 본인 확인:</strong> 본인이 작성한 리뷰만 삭제할 수 있습니다.
-            </div>
             <div class="form-group">
                 <label>리뷰 ID</label>
                 <input type="number" id="deleteReviewId" placeholder="삭제할 리뷰 ID">
@@ -539,28 +245,60 @@
         </div>
     </div>
 
-    <!-- 내 리뷰 탭 -->
     <div id="myreview-tab" class="tab-content">
         <div class="card">
             <h2 class="section-title">내가 작성한 리뷰</h2>
-            <div class="info-box">
-                <strong>🔐 로그인 필요:</strong> 로그인 후 조회 가능합니다.
-            </div>
             <button onclick="getMyReviews()">내 리뷰 조회</button>
             <div id="myReviewsResponse" class="response" style="display:none;"></div>
         </div>
     </div>
+
+    <div id="mypage-tab" class="tab-content">
+        <div class="card">
+            <h2 class="section-title">내 정보 (마이페이지)</h2>
+            <div class="info-box">
+                <strong>💡 기능:</strong> 내 프로필 정보와 찜한 카페 개수를 확인합니다.
+            </div>
+            <button onclick="getMyPageInfo()">내 정보 조회</button>
+            <div id="myPageResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">북마크(찜) 관리 테스트</h2>
+            <div class="info-box">
+                <strong>💡 기능:</strong> 특정 카페를 찜했는지 확인(GET)하고, 찜 추가(POST)/해제(DELETE)를 테스트합니다.
+            </div>
+            <div class="form-group">
+                <label>카페 ID</label>
+                <input type="number" id="bookmarkCafeId" placeholder="테스트할 카페 ID (예: 100)">
+            </div>
+            <div>
+                <button onclick="checkBookmarkStatus()" style="background: #2196f3;">🔍 찜 여부 확인 (GET)</button>
+                <button onclick="addBookmark()" style="background: #4caf50;">➕ 찜 하기 (POST)</button>
+                <button onclick="removeBookmark()" style="background: #f44336;">➖ 찜 해제 (DELETE)</button>
+            </div>
+            <div id="bookmarkStatusResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">내 찜 목록</h2>
+            <div class="info-box">
+                <strong>💡 기능:</strong> 내가 찜한 모든 카페 목록을 불러옵니다.
+            </div>
+            <button onclick="getMyBookmarks()">찜 목록 조회</button>
+            <div id="myBookmarksResponse" class="response" style="display:none;"></div>
+        </div>
+    </div>
 </div>
 
-<!-- 이미지 확대 모달 -->
 <div id="imageModal" class="modal" onclick="closeModal()">
     <span class="modal-close">&times;</span>
     <img id="modalImage" src="" alt="">
 </div>
 
 <script>
-    // const API_BASE_URL = 'http://localhost:8080/api';
-    const API_BASE_URL = 'https://go-cagong.ddns.net/api';
+    const API_BASE_URL = 'http://localhost:8080/api';
+    // const API_BASE_URL = 'https://go-cagong.ddns.net/api';
 
     let cafeImageFiles = [];
     let reviewImageFiles = [];
@@ -575,18 +313,22 @@
         });
 
         document.getElementById(`${tabName}-tab`).classList.add('active');
-        event.target.classList.add('active');
+        // 클릭된 버튼 찾기
+        const buttons = document.querySelectorAll('.tab-button');
+        buttons.forEach(btn => {
+            if(btn.textContent.includes(tabName === 'mypage' ? '마이페이지' :
+                                        tabName === 'myreview' ? '내 리뷰' :
+                                        tabName === 'review' ? '리뷰 관리' : '카페 관리')) {
+                btn.classList.add('active');
+            }
+        });
     }
 
     // 로그인 상태 확인
     function checkAuthStatus() {
-        fetch(`${API_BASE_URL}/auth/me`, {
-            credentials: 'include'
-        })
+        fetch(`${API_BASE_URL}/auth/me`, { credentials: 'include' })
             .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
+                if (response.ok) return response.json();
                 throw new Error('Not authenticated');
             })
             .then(data => {
@@ -601,100 +343,27 @@
             });
     }
 
-    // 카카오 로그인
+    // [중요] 로컬 테스트용 로그인 주소 (// 주석 위치 확인 필수!)
     function loginWithKakao() {
-        // window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
-        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/kakao';
+        window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+        // window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/kakao';
     }
 
-    // 구글 로그인
     function loginWithGoogle() {
-        // window.location.href = 'http://localhost:8080/oauth2/authorization/google';
-        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/google';
+        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        // window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/google';
     }
 
-    // 네이버 로그인
     function loginWithNaver() {
-        // window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
-        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/naver';
+        window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        // window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/naver';
     }
 
-
-
-
-    // 로그아웃
     function logout() {
-        fetch(`${API_BASE_URL}/auth/logout`, {
-            method: 'POST',
-            credentials: 'include'
-        })
-            .then(() => {
-                alert('로그아웃되었습니다.');
-                checkAuthStatus();
-            });
+        fetch(`${API_BASE_URL}/auth/logout`, { method: 'POST', credentials: 'include' })
+            .then(() => { alert('로그아웃되었습니다.'); checkAuthStatus(); });
     }
 
-    // 이미지 미리보기 (카페)
-    function previewCafeImages(event) {
-        cafeImageFiles = Array.from(event.target.files);
-        const preview = document.getElementById('cafeImagePreview');
-        preview.innerHTML = '';
-
-        cafeImageFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const div = document.createElement('div');
-                div.className = 'image-preview-item';
-                div.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <button onclick="removeCafeImage(${index})">×</button>
-                    `;
-                preview.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function removeCafeImage(index) {
-        cafeImageFiles.splice(index, 1);
-        document.getElementById('cafeImages').value = '';
-        const dt = new DataTransfer();
-        cafeImageFiles.forEach(file => dt.items.add(file));
-        document.getElementById('cafeImages').files = dt.files;
-        previewCafeImages({ target: { files: dt.files } });
-    }
-
-    // 이미지 미리보기 (리뷰)
-    function previewReviewImages(event) {
-        reviewImageFiles = Array.from(event.target.files);
-        const preview = document.getElementById('reviewImagePreview');
-        preview.innerHTML = '';
-
-        reviewImageFiles.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const div = document.createElement('div');
-                div.className = 'image-preview-item';
-                div.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <button onclick="removeReviewImage(${index})">×</button>
-                    `;
-                preview.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    function removeReviewImage(index) {
-        reviewImageFiles.splice(index, 1);
-        document.getElementById('reviewImages').value = '';
-        const dt = new DataTransfer();
-        reviewImageFiles.forEach(file => dt.items.add(file));
-        document.getElementById('reviewImages').files = dt.files;
-        previewReviewImages({ target: { files: dt.files } });
-    }
-
-    // 응답 표시
     function showResponse(elementId, data, isError = false) {
         const element = document.getElementById(elementId);
         element.style.display = 'block';
@@ -703,6 +372,54 @@
                 <div class="response-title">${isError ? '❌ 에러' : '✅ 성공'}</div>
                 <pre>${JSON.stringify(data, null, 2)}</pre>
             `;
+    }
+
+    // 이미지 프리뷰 함수
+    function previewCafeImages(event) {
+        cafeImageFiles = Array.from(event.target.files);
+        const preview = document.getElementById('cafeImagePreview');
+        preview.innerHTML = '';
+        cafeImageFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item';
+                div.innerHTML = `<img src="${e.target.result}"><button onclick="removeCafeImage(${index})">×</button>`;
+                preview.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function removeCafeImage(index) {
+        cafeImageFiles.splice(index, 1);
+        const dt = new DataTransfer();
+        cafeImageFiles.forEach(file => dt.items.add(file));
+        document.getElementById('cafeImages').files = dt.files;
+        previewCafeImages({ target: { files: dt.files } });
+    }
+
+    function previewReviewImages(event) {
+        reviewImageFiles = Array.from(event.target.files);
+        const preview = document.getElementById('reviewImagePreview');
+        preview.innerHTML = '';
+        reviewImageFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item';
+                div.innerHTML = `<img src="${e.target.result}"><button onclick="removeReviewImage(${index})">×</button>`;
+                preview.appendChild(div);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+     function removeReviewImage(index) {
+        reviewImageFiles.splice(index, 1);
+        const dt = new DataTransfer();
+        reviewImageFiles.forEach(file => dt.items.add(file));
+        document.getElementById('reviewImages').files = dt.files;
+        previewReviewImages({ target: { files: dt.files } });
     }
 
     // 카페 등록
@@ -719,314 +436,260 @@
         formData.append('mood', document.getElementById('cafeMood').value);
         formData.append('hasParking', document.getElementById('cafeHasParking').value);
         formData.append('aiSummary', document.getElementById('cafeAiSummary').value);
-
-        cafeImageFiles.forEach(file => {
-            formData.append('images', file);
-        });
+        cafeImageFiles.forEach(file => formData.append('images', file));
 
         try {
-            const response = await fetch(`${API_BASE_URL}/admin/cafe`, {
-                method: 'POST',
-                body: formData,
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/admin/cafe`, { method: 'POST', body: formData, credentials: 'include' });
             const data = await response.json();
             showResponse('createCafeResponse', data, !response.ok);
-        } catch (error) {
-            showResponse('createCafeResponse', { error: error.message }, true);
-        }
+        } catch (error) { showResponse('createCafeResponse', { error: error.message }, true); }
     }
 
-    // 전체 카페 조회
+    // [수정된 부분] 전체 카페 조회 (이미지 표시 로직 추가)
     async function getAllCafes() {
         try {
-            const response = await fetch(`${API_BASE_URL}/cafe`, {
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/cafe`, { credentials: 'include' });
             const data = await response.json();
-
-            let html = `
-                    <div class="response-title">✅ 전체 카페 (${data.count}개)</div>
-                `;
+            let html = `<div class="response-title">✅ 전체 카페 (${data.count}개)</div>`;
 
             data.cafes.forEach(cafe => {
+                // 이미지 URL 확인
+                const imgUrl = cafe.mainImageUrl || cafe.main_image_url || (cafe.images && cafe.images[0]);
+
                 html += `
-                        <div class="cafe-card">
-                            <h4>${cafe.name}</h4>
-                            <p><strong>주소:</strong> ${cafe.address}</p>
-                            <p><strong>좌표:</strong> ${cafe.latitude}, ${cafe.longitude}</p>
-                            <p><strong>분위기:</strong> ${cafe.mood} | <strong>주차:</strong> ${cafe.hasParking ? '가능' : '불가능'}</p>
-                            <p><strong>아메리카노:</strong> ${cafe.americanoPrice}원</p>
-                        </div>
-                    `;
-            });
-
-            document.getElementById('cafeListResponse').style.display = 'block';
-            document.getElementById('cafeListResponse').className = 'response success';
-            document.getElementById('cafeListResponse').innerHTML = html;
-        } catch (error) {
-            showResponse('cafeListResponse', { error: error.message }, true);
-        }
-    }
-
-    // 카페 상세 조회
-    async function getCafeDetail() {
-        const cafeId = document.getElementById('cafeDetailId').value;
-        if (!cafeId) {
-            alert('카페 ID를 입력하세요.');
-            return;
-        }
-
-        try {
-            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}`, {
-                credentials: 'include'
-            });
-            const data = await response.json();
-
-            let html = `
-                    <div class="response-title">✅ 카페 상세 정보</div>
                     <div class="cafe-card">
-                        <h4>${data.name}</h4>
-                        <p><strong>주소:</strong> ${data.address}</p>
-                        <p><strong>영업시간:</strong> ${data.businessHours}</p>
-                        <p><strong>전화:</strong> ${data.tel || '없음'}</p>
-                        <p><strong>설명:</strong> ${data.description || '없음'}</p>
-                        <p><strong>AI 요약:</strong> ${data.aiSummary || '없음'}</p>
-                        <div class="review-images">
+                        <h4>${cafe.name} (${cafe.id})</h4>
+                        <p><strong>주소:</strong> ${cafe.address}</p>
+                        <p><strong>좌표:</strong> ${cafe.latitude}, ${cafe.longitude}</p>
+                        <p><strong>아메리카노:</strong> ${cafe.americanoPrice}원</p>
                 `;
 
-            if (data.images && data.images.length > 0) {
-                data.images.forEach(url => {
-                    html += `<img src="${url}" alt="Cafe" onclick="openModal('${url}')">`;
-                });
-            }
+                if (imgUrl) {
+                    html += `
+                        <div class="review-images" style="margin-top: 10px;">
+                            <img src="${imgUrl}" alt="Cafe Image" onclick="openModal('${imgUrl}')"
+                                 style="width: 120px; height: 120px; object-fit: cover; border-radius: 8px; cursor: pointer; border: 1px solid #ddd;">
+                        </div>
+                    `;
+                }
 
-            html += `</div></div>`;
-
-            document.getElementById('cafeListResponse').style.display = 'block';
-            document.getElementById('cafeListResponse').className = 'response success';
+                html += `</div>`;
+            });
             document.getElementById('cafeListResponse').innerHTML = html;
-        } catch (error) {
-            showResponse('cafeListResponse', { error: error.message }, true);
-        }
+            document.getElementById('cafeListResponse').style.display = 'block';
+        } catch (error) { showResponse('cafeListResponse', { error: error.message }, true); }
     }
 
-    // 카페 삭제
+    async function getCafeDetail() {
+        const cafeId = document.getElementById('cafeDetailId').value;
+        if(!cafeId) return alert('ID 입력하세요');
+        try {
+            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}`, { credentials: 'include' });
+            const data = await response.json();
+            showResponse('cafeListResponse', data, !response.ok);
+        } catch (error) { showResponse('cafeListResponse', { error: error.message }, true); }
+    }
+
     async function deleteCafe() {
         const cafeId = document.getElementById('deleteCafeId').value;
-        if (!cafeId) {
-            alert('카페 ID를 입력하세요.');
-            return;
-        }
-
-        if (!confirm('정말 삭제하시겠습니까?')) return;
-
+        if(!cafeId || !confirm('삭제합니까?')) return;
         try {
-            const response = await fetch(`${API_BASE_URL}/admin/cafe/${cafeId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/admin/cafe/${cafeId}`, { method: 'DELETE', credentials: 'include' });
             const data = await response.text();
             showResponse('deleteCafeResponse', { message: data }, !response.ok);
-        } catch (error) {
-            showResponse('deleteCafeResponse', { error: error.message }, true);
-        }
+        } catch (error) { showResponse('deleteCafeResponse', { error: error.message }, true); }
     }
 
-    // 리뷰 작성
+    // 리뷰 관련 함수들
     async function createReview() {
         const cafeId = document.getElementById('reviewCafeId').value;
-        if (!cafeId) {
-            alert('카페 ID를 입력하세요.');
-            return;
-        }
-
         const formData = new FormData();
         formData.append('rating', document.getElementById('reviewRating').value);
         formData.append('content', document.getElementById('reviewContent').value);
-
-        reviewImageFiles.forEach(file => {
-            formData.append('images', file);
-        });
-
+        reviewImageFiles.forEach(file => formData.append('images', file));
         try {
-            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}/review`, {
-                method: 'POST',
-                body: formData,
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}/review`, { method: 'POST', body: formData, credentials: 'include' });
             const data = await response.json();
             showResponse('createReviewResponse', data, !response.ok);
-
-            if (response.ok) {
-                document.getElementById('reviewContent').value = '';
-                document.getElementById('reviewImages').value = '';
-                reviewImageFiles = [];
-                document.getElementById('reviewImagePreview').innerHTML = '';
-            }
-        } catch (error) {
-            showResponse('createReviewResponse', { error: error.message }, true);
-        }
+        } catch(e) { showResponse('createReviewResponse', {error: e.message}, true); }
     }
 
-    // 카페별 리뷰 조회
     async function getReviewsByCafe() {
         const cafeId = document.getElementById('viewReviewCafeId').value;
-        if (!cafeId) {
-            alert('카페 ID를 입력하세요.');
-            return;
-        }
-
         try {
-            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}/review`, {
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/cafe/${cafeId}/review`, { credentials: 'include' });
             const data = await response.json();
-
-            let html = `
-                    <div class="response-title">✅ 리뷰 목록 (${data.reviewCount}개, 평균 ${data.averageRating}점)</div>
-                `;
-
-            data.reviews.forEach(review => {
-                const stars = '⭐'.repeat(review.rating);
-                html += `
-                        <div class="review-card">
-                            <div class="rating">${stars} ${review.rating}점</div>
-                            <p><strong>${review.userName}</strong> | ${new Date(review.createdAt).toLocaleString()}</p>
-                            <p>${review.content}</p>
-                    `;
-
-                if (review.images && review.images.length > 0) {
-                    html += '<div class="review-images">';
-                    review.images.forEach(url => {
-                        html += `<img src="${url}" alt="Review" onclick="openModal('${url}')">`;
-                    });
-                    html += '</div>';
-                }
-
-                html += `<p style="margin-top: 10px;"><small>리뷰 ID: ${review.reviewId}</small></p></div>`;
-            });
-
-            document.getElementById('reviewListResponse').style.display = 'block';
-            document.getElementById('reviewListResponse').className = 'response success';
-            document.getElementById('reviewListResponse').innerHTML = html;
-        } catch (error) {
-            showResponse('reviewListResponse', { error: error.message }, true);
-        }
+            showResponse('reviewListResponse', data, !response.ok);
+        } catch(e) { showResponse('reviewListResponse', {error: e.message}, true); }
     }
 
-    // 리뷰 수정
     async function updateReview() {
         const reviewId = document.getElementById('updateReviewId').value;
-        if (!reviewId) {
-            alert('리뷰 ID를 입력하세요.');
-            return;
-        }
-
         const formData = new FormData();
-
         const rating = document.getElementById('updateReviewRating').value;
         if (rating) formData.append('rating', rating);
-
         const content = document.getElementById('updateReviewContent').value;
         if (content) formData.append('content', content);
-
         const newImages = document.getElementById('updateReviewImages').files;
-        for (let file of newImages) {
-            formData.append('images', file);
-        }
-
+        for (let file of newImages) formData.append('images', file);
         try {
-            const response = await fetch(`${API_BASE_URL}/review/${reviewId}`, {
-                method: 'PATCH',
-                body: formData,
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/review/${reviewId}`, { method: 'PATCH', body: formData, credentials: 'include' });
             const data = await response.json();
             showResponse('updateReviewResponse', data, !response.ok);
-        } catch (error) {
-            showResponse('updateReviewResponse', { error: error.message }, true);
-        }
+        } catch (error) { showResponse('updateReviewResponse', { error: error.message }, true); }
     }
 
-    // 리뷰 삭제
     async function deleteReview() {
         const reviewId = document.getElementById('deleteReviewId').value;
-        if (!reviewId) {
-            alert('리뷰 ID를 입력하세요.');
-            return;
-        }
-
-        if (!confirm('정말 삭제하시겠습니까?')) return;
-
+        if (!reviewId || !confirm('정말 삭제하시겠습니까?')) return;
         try {
-            const response = await fetch(`${API_BASE_URL}/review/${reviewId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-            });
+            const response = await fetch(`${API_BASE_URL}/review/${reviewId}`, { method: 'DELETE', credentials: 'include' });
             const data = await response.json();
             showResponse('deleteReviewResponse', data, !response.ok);
-        } catch (error) {
-            showResponse('deleteReviewResponse', { error: error.message }, true);
-        }
+        } catch (error) { showResponse('deleteReviewResponse', { error: error.message }, true); }
     }
 
-    // 내 리뷰 조회
     async function getMyReviews() {
         try {
-            const response = await fetch(`${API_BASE_URL}/review/me`, {
+            const response = await fetch(`${API_BASE_URL}/review/me`, { credentials: 'include' });
+            const data = await response.json();
+            showResponse('myReviewsResponse', data, !response.ok);
+        } catch(e) { showResponse('myReviewsResponse', {error: e.message}, true); }
+    }
+
+
+    // ==========================================
+    // 마이페이지 & 북마크 기능
+    // ==========================================
+
+    async function getMyPageInfo() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/mypage`, { method: 'GET', credentials: 'include' });
+            const data = await response.json();
+            showResponse('myPageResponse', data, !response.ok);
+        } catch (error) { showResponse('myPageResponse', { error: error.message }, true); }
+    }
+
+    async function checkBookmarkStatus() {
+        const cafeId = document.getElementById('bookmarkCafeId').value;
+        if (!cafeId) return alert('카페 ID를 입력하세요.');
+        try {
+            const response = await fetch(`${API_BASE_URL}/cafes/${cafeId}/bookmark`, { method: 'GET', credentials: 'include' });
+            const data = await response.json();
+            const resultDiv = document.getElementById('bookmarkStatusResponse');
+            resultDiv.style.display = 'block';
+            let isBookmarked = data === true || data.isBookmarked === true;
+            resultDiv.className = isBookmarked ? 'response success' : 'response error';
+            resultDiv.innerHTML = `
+                <div class="response-title">🔍 조회 결과</div>
+                <div style="font-size: 1.2em; margin-top: 10px;">
+                    찜 여부: <span class="status-badge ${isBookmarked ? 'status-true' : 'status-false'}">
+                        ${isBookmarked ? '❤️ 찜 함 (TRUE)' : '🤍 찜 안 함 (FALSE)'}
+                    </span>
+                </div>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+        } catch (error) { showResponse('bookmarkStatusResponse', { error: error.message }, true); }
+    }
+
+    async function addBookmark() {
+        const cafeId = document.getElementById('bookmarkCafeId').value;
+        if (!cafeId) return alert('카페 ID를 입력하세요.');
+        try {
+            await fetch(`${API_BASE_URL}/cafes/${cafeId}/bookmark`, { method: 'POST', credentials: 'include' });
+            checkBookmarkStatus();
+            alert('찜 추가 요청 완료');
+        } catch (error) { showResponse('bookmarkStatusResponse', { error: error.message }, true); }
+    }
+
+    async function removeBookmark() {
+        const cafeId = document.getElementById('bookmarkCafeId').value;
+        if (!cafeId) return alert('카페 ID를 입력하세요.');
+        try {
+            await fetch(`${API_BASE_URL}/cafes/${cafeId}/bookmark`, { method: 'DELETE', credentials: 'include' });
+            checkBookmarkStatus();
+            alert('찜 해제 요청 완료');
+        } catch (error) { showResponse('bookmarkStatusResponse', { error: error.message }, true); }
+    }
+
+    // [수정된 부분] 내 찜 목록 조회 (undefined 해결)
+async function getMyBookmarks() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/bookmarks`, {
+                method: 'GET',
                 credentials: 'include'
             });
             const data = await response.json();
 
-            let html = `
-                    <div class="response-title">✅ 내 리뷰 (${data.reviewCount}개)</div>
-                    <p><strong>사용자:</strong> ${data.userName}</p>
-                `;
+            const list = data.bookmarks || data;
+            const count = data.total_count || list.length || 0;
 
-            data.reviews.forEach(review => {
-                const stars = '⭐'.repeat(review.rating);
-                html += `
-                        <div class="review-card">
-                            <h4>${review.cafeName}</h4>
-                            <div class="rating">${stars} ${review.rating}점</div>
-                            <p>${review.content}</p>
-                            <p><small>${new Date(review.createdAt).toLocaleString()}</small></p>
+            let html = `<div class="response-title">✅ 내 찜 목록 (${count}개)</div>`;
+
+            if(Array.isArray(list)) {
+                list.forEach(cafe => {
+                    const name = cafe.cafe_name || cafe.cafeName || cafe.name || '이름 없음';
+                    const id = cafe.cafe_id || cafe.cafeId || cafe.id || 'ID없음';
+                    const addr = cafe.address || '';
+
+                    // ▼▼▼ [핵심 수정] 사진이 없으면 '기본 이미지'를 넣어라!
+                    let imgUrl = cafe.main_image_url || cafe.mainImageUrl || (cafe.images && cafe.images[0]);
+
+                    // 이미지가 없으면 회색 박스 이미지(placeholder) 사용
+                    if (!imgUrl) {
+                        imgUrl = 'https://placehold.co/100x100?text=No+Image';
+                    }
+
+                    html += `
+                        <div class="cafe-card" style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <h4>${name} (ID: ${id})</h4>
+                                <p>${addr}</p>
+                            </div>
+
+                            <div class="review-images">
+                                <img src="${imgUrl}" alt="cafe" onclick="openModal('${imgUrl}')"
+                                     style="width:80px; height:80px; object-fit:cover; border-radius:8px; border: 1px solid #ddd;">
+                            </div>
+                        </div>
+                        <div style="text-align: right; margin-top: 5px;">
+                             <button onclick="deleteBookmarkDirectly(${id})" style="background:#ff5252; padding:5px 10px; font-size:12px; margin:0;">삭제</button>
+                        </div>
+                        <hr style="margin: 10px 0; border: 0; border-top: 1px solid #eee;">
                     `;
+                });
+            } else {
+                html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            }
 
-                if (review.images && review.images.length > 0) {
-                    html += '<div class="review-images">';
-                    review.images.forEach(url => {
-                        html += `<img src="${url}" alt="Review" onclick="openModal('${url}')">`;
-                    });
-                    html += '</div>';
-                }
+            const element = document.getElementById('myBookmarksResponse');
+            element.style.display = 'block';
+            element.className = 'response success';
+            element.innerHTML = html;
 
-                html += `<p style="margin-top: 10px;"><small>리뷰 ID: ${review.reviewId}</small></p></div>`;
-            });
-
-            document.getElementById('myReviewsResponse').style.display = 'block';
-            document.getElementById('myReviewsResponse').className = 'response success';
-            document.getElementById('myReviewsResponse').innerHTML = html;
         } catch (error) {
-            showResponse('myReviewsResponse', { error: error.message }, true);
+            showResponse('myBookmarksResponse', { error: error.message }, true);
         }
     }
 
-    // 이미지 모달
+    async function deleteBookmarkDirectly(id) {
+        if(!confirm('찜 목록에서 삭제할까요?')) return;
+        try {
+            await fetch(`${API_BASE_URL}/cafes/${id}/bookmark`, { method: 'DELETE', credentials: 'include' });
+            alert('삭제되었습니다.');
+            getMyBookmarks();
+        } catch(e) { alert('삭제 실패'); }
+    }
+
     function openModal(url) {
         document.getElementById('modalImage').src = url;
         document.getElementById('imageModal').classList.add('active');
     }
-
     function closeModal() {
         document.getElementById('imageModal').classList.remove('active');
     }
 
-    // 페이지 로드 시 인증 상태 확인
-    window.onload = () => {
-        checkAuthStatus();
-    };
+    window.onload = () => { checkAuthStatus(); };
 </script>
 </body>
 </html>

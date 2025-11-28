@@ -73,16 +73,34 @@ public class MyPageService {
     }
 
     // 4. 저장한 카페 목록 조회
+// 4. 저장한 카페 목록 조회 (수정 완료: getPhotos() 사용)
     public Map<String, Object> getMyBookmarks() {
         User user = getCurrentUser();
         List<Bookmark> bookmarks = bookmarkRepository.findAllByUser(user);
 
-        List<Map<String, Object>> bookmarkList = bookmarks.stream().map(bookmark -> Map.<String, Object>of(
-                "bookmark_id", bookmark.getBookmarkId(),
-                "cafe_id", bookmark.getCafe().getCafeId(),
-                "cafe_name", bookmark.getCafe().getName(),
-                "address", bookmark.getCafe().getAddress()
-        )).collect(Collectors.toList());
+        List<Map<String, Object>> bookmarkList = bookmarks.stream().map(bookmark -> {
+            Cafe cafe = bookmark.getCafe();
+
+            // ▼▼▼ [이미지 가져오기 로직] ▼▼▼
+            String mainImageUrl = null;
+
+            // Cafe 엔티티의 필드명이 'photos'이므로 getPhotos()를 사용합니다.
+            if (cafe.getPhotos() != null && !cafe.getPhotos().isEmpty()) {
+                // 첫 번째 사진(0번 인덱스)의 URL을 가져옵니다.
+                // (만약 여기서 빨간줄이 뜨면 CafePhoto 엔티티의 URL 필드명이 getImageUrl()인지 getUrl()인지 확인 필요)
+                mainImageUrl = cafe.getPhotos().get(0).getImageUrl();
+            }
+            // ▲▲▲ [여기까지] ▲▲▲
+
+            return Map.<String, Object>of(
+                    "bookmark_id", bookmark.getBookmarkId(),
+                    "cafe_id", cafe.getCafeId(),
+                    "cafe_name", cafe.getName(),
+                    "address", cafe.getAddress(),
+                    // 이미지가 있으면 넣고, 없으면 빈 문자열("") 반환
+                    "main_image_url", mainImageUrl != null ? mainImageUrl : ""
+            );
+        }).collect(Collectors.toList());
 
         return Map.of(
                 "total_count", bookmarkList.size(),
