@@ -53,10 +53,9 @@ public class MyPageService {
         User user = getCurrentUser();
         List<Review> reviews = reviewRepository.findAllByUser(user);
 
-        // [수정됨] Map.<String, Object>of 사용 + getCafe_id() 사용
         List<Map<String, Object>> reviewList = reviews.stream().map(review -> Map.<String, Object>of(
                 "review_id", review.getReviewId(),
-                "cafe_id", review.getCafe().getCafeId(), // Cafe 엔티티의 필드명(cafe_id)에 맞춤
+                "cafe_id", review.getCafe().getCafeId(),
                 "cafe_name", review.getCafe().getName(),
                 "rating", review.getRating(),
                 "content", review.getContent()
@@ -78,7 +77,6 @@ public class MyPageService {
         User user = getCurrentUser();
         List<Bookmark> bookmarks = bookmarkRepository.findAllByUser(user);
 
-        // [수정됨] Map.<String, Object>of 사용 + getCafe_id() 사용
         List<Map<String, Object>> bookmarkList = bookmarks.stream().map(bookmark -> Map.<String, Object>of(
                 "bookmark_id", bookmark.getBookmarkId(),
                 "cafe_id", bookmark.getCafe().getCafeId(),
@@ -117,5 +115,14 @@ public class MyPageService {
                 .orElseThrow(() -> new RuntimeException("카페를 찾을 수 없습니다."));
 
         bookmarkRepository.deleteByUserAndCafe(user, cafe);
+    }
+
+    // ▼▼▼ [7. 추가됨] 카페 저장 여부 확인 (단독 확인용) ▼▼▼
+    public boolean checkBookmark(Long cafeId) {
+        User user = getCurrentUser();
+
+        // 아까 Repository에 추가했던 'ID로 확인하는 메서드'를 사용합니다.
+        // (User 엔티티의 ID 필드명이 getUserId()인지 getId()인지 확인 필요 - 보통 getUserId()로 가정)
+        return bookmarkRepository.existsByUser_IdAndCafe_CafeId(user.getId(), cafeId);
     }
 }

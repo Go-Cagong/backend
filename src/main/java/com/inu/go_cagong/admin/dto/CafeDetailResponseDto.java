@@ -36,6 +36,8 @@ public class CafeDetailResponseDto {
     private Double reviewAverage;
     private Integer reviewCount;
 
+    private boolean isSaved; // 사용자가 저장했는지 여부 (true/false) //////////////////////////////////
+
     // Entity -> DTO 변환
     public static CafeDetailResponseDto from(Cafe cafe) {
         // CafePhoto에서 imageUrl만 추출

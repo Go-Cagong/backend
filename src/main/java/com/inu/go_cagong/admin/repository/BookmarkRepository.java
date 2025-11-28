@@ -19,5 +19,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     // 새롭게 추가 X
     // 설명: "유저번호(userId)랑 카페번호(cafeId)만 주면 저장 여부(true/false) 알려줌"
-//    boolean existsByUser_UserIdAndCafe_CafeId(Long userId, Long cafeId);
+    boolean existsByUser_IdAndCafe_CafeId(Long userId, Long cafeId);
 }
