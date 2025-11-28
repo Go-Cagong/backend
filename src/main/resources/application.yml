@@ -1,3 +1,8 @@
+server:
+  forward-headers-strategy: framework  # Nginx가 보내준 HTTPS 헤더를 인식하게 함
+  port: 8080 # (기존 포트 설정이 있다면 유지, 없으면 생략 가능)
+
+
 spring:
   config:
     import: optional:file:.env[.properties]
@@ -20,11 +25,18 @@ spring:
 
   # 재웅 db
 #  datasource:
-#    url: jdbc:mariadb://localhost:3306/go_cagong
-#    username: root
-#    password: Wodnd0613!~
-#    driver-class-name: org.mariadb.jdbc.Driver
+#     url: jdbc:mariadb://localhost:3306/go_cagong
+#     username: root
+#     password: Wodnd0613!~ #컴퓨터
+#     password: 1234 #맥북
+#     driver-class-name: org.mariadb.jdbc.Driver
 
+#  # 배포 db
+#  datasource:
+#    url: jdbc:mariadb://localhost:3306/go_cagong
+#    username: go_cagong
+#    password: gocagong2025!#
+#    driver-class-name: org.mariadb.jdbc.Driver
 
 
   jpa:
@@ -103,7 +115,11 @@ jwt:
   refresh-token-expiration: 604800000   # 7일
 
 cors:
-  allowed-origins: "http://localhost:3000"
+  allowed-origins:
+  - "http://localhost:3000"
+  - "http://localhost:8080"
+  - "https://go-cagong.ddns.net"
+  - "http://go-cagong.ddns.net"
   allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
   allowed-headers: "*"
   allow-credentials: true

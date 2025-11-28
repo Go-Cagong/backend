@@ -390,6 +390,10 @@
                     <label>아메리카노 가격</label>
                     <input type="number" id="cafeAmericanoPrice" placeholder="5000">
                 </div>
+                <div class="form-group">
+                <label>Ai요약</label>
+                <input type="text" id="cafeAiSummary" placeholder="5000">
+            </div>
             </div>
             <div class="grid-2">
                 <div class="form-group">
@@ -555,7 +559,8 @@
 </div>
 
 <script>
-    const API_BASE_URL = 'http://localhost:8080/api';
+    // const API_BASE_URL = 'http://localhost:8080/api';
+    const API_BASE_URL = 'https://go-cagong.ddns.net/api';
 
     let cafeImageFiles = [];
     let reviewImageFiles = [];
@@ -598,17 +603,20 @@
 
     // 카카오 로그인
     function loginWithKakao() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+        // window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/kakao';
     }
 
     // 구글 로그인
     function loginWithGoogle() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        // window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/google';
     }
 
     // 네이버 로그인
     function loginWithNaver() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        // window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/naver';
     }
 
 
@@ -710,6 +718,7 @@
         formData.append('americanoPrice', document.getElementById('cafeAmericanoPrice').value);
         formData.append('mood', document.getElementById('cafeMood').value);
         formData.append('hasParking', document.getElementById('cafeHasParking').value);
+        formData.append('aiSummary', document.getElementById('cafeAiSummary').value);
 
         cafeImageFiles.forEach(file => {
             formData.append('images', file);
