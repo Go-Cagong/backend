@@ -25,19 +25,19 @@ public class MyPageController {
     /**
      * 2. 내 리뷰 목록 조회
      */
-    @GetMapping("/api/user/reviews")
-    public Map<String, Object> getMyReviews() {
-        return myPageService.getMyReviews();
-    }
+//    @GetMapping("/api/user/reviews")
+//    public Map<String, Object> getMyReviews() {
+//        return myPageService.getMyReviews();
+//    }
 
     /**
      * 3. 리뷰 삭제
      */
-    @DeleteMapping("/api/reviews/{review_id}")
-    public Map<String, String> deleteReview(@PathVariable("review_id") Long review_id) {
-        myPageService.deleteReview(review_id);
-        return Map.of("message", "리뷰가 성공적으로 삭제되었습니다.");
-    }
+//    @DeleteMapping("/api/reviews/{review_id}")
+//    public Map<String, String> deleteReview(@PathVariable("review_id") Long review_id) {
+//        myPageService.deleteReview(review_id);
+//        return Map.of("message", "리뷰가 성공적으로 삭제되었습니다.");
+//    }
 
     /**
      * 4. 저장한 카페 목록 조회

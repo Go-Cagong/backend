@@ -49,28 +49,28 @@ public class MyPageService {
     }
 
     // 2. 내 리뷰 목록 조회
-    public Map<String, Object> getMyReviews() {
-        User user = getCurrentUser();
-        List<Review> reviews = reviewRepository.findAllByUser(user);
-
-        List<Map<String, Object>> reviewList = reviews.stream().map(review -> Map.<String, Object>of(
-                "review_id", review.getReviewId(),
-                "cafe_id", review.getCafe().getCafeId(),
-                "cafe_name", review.getCafe().getName(),
-                "rating", review.getRating(),
-                "content", review.getContent()
-        )).collect(Collectors.toList());
-
-        return Map.of(
-                "total_count", reviewList.size(),
-                "reviews", reviewList
-        );
-    }
+//    public Map<String, Object> getMyReviews() {
+//        User user = getCurrentUser();
+//        List<Review> reviews = reviewRepository.findAllByUser(user);
+//
+//        List<Map<String, Object>> reviewList = reviews.stream().map(review -> Map.<String, Object>of(
+//                "review_id", review.getReviewId(),
+//                "cafe_id", review.getCafe().getCafeId(),
+//                "cafe_name", review.getCafe().getName(),
+//                "rating", review.getRating(),
+//                "content", review.getContent()
+//        )).collect(Collectors.toList());
+//
+//        return Map.of(
+//                "total_count", reviewList.size(),
+//                "reviews", reviewList
+//        );
+//    }
 
     // 3. 리뷰 삭제
-    public void deleteReview(Long reviewId) {
-        reviewRepository.deleteById(reviewId);
-    }
+//    public void deleteReview(Long reviewId) {
+//        reviewRepository.deleteById(reviewId);
+//    }
 
     // 4. 저장한 카페 목록 조회
 // 4. 저장한 카페 목록 조회 (수정 완료: getPhotos() 사용)
