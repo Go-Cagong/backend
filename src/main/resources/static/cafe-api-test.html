@@ -632,6 +632,10 @@
             credentials: 'include'
         })
             .then(() => {
+                document.cookie = "access_token=; path=/; max-age=0";
+                document.cookie = "refresh_token=; path=/; max-age=0";
+                document.cookie = "JSESSIONID=; path=/; max-age=0";
+
                 alert('로그아웃되었습니다.');
                 checkAuthStatus();
             });
