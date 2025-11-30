@@ -11,6 +11,7 @@ import com.inu.go_cagong.review.entity.Review;
 import com.inu.go_cagong.review.repository.ReviewRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -86,14 +88,18 @@ public class MyPageService {
 //        reviewRepository.deleteById(reviewId);
 //    }
 
-    // 4. 저장한 카페 목록 조회
-// 4. 저장한 카페 목록 조회 (수정 완료: getPhotos() 사용)
+    // 4. 저장한 카페 목록 조회 (수정 완료: fetch join 사용으로 photos 로딩)
     public Map<String, Object> getMyBookmarks() {
         User user = getCurrentUser();
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByUser(user);
+        log.info("=== 북마크 조회 시작: 유저 ID = {}", user.getId());
+        
+        // fetch join으로 cafe와 photos를 한 번에 가져옴 (N+1 문제 해결)
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByUserWithCafePhotos(user);
+        log.info("=== 조회된 북마크 개수: {}", bookmarks.size());
 
         List<Map<String, Object>> bookmarkList = bookmarks.stream().map(bookmark -> {
             Cafe cafe = bookmark.getCafe();
+            log.info("=== 카페 정보: ID={}, 이름={}", cafe.getCafeId(), cafe.getName());
 
             // ▼▼▼ [이미지 가져오기 로직] ▼▼▼
             String mainImageUrl = null;
@@ -101,8 +107,10 @@ public class MyPageService {
             // Cafe 엔티티의 필드명이 'photos'이므로 getPhotos()를 사용합니다.
             if (cafe.getPhotos() != null && !cafe.getPhotos().isEmpty()) {
                 // 첫 번째 사진(0번 인덱스)의 URL을 가져옵니다.
-                // (만약 여기서 빨간줄이 뜨면 CafePhoto 엔티티의 URL 필드명이 getImageUrl()인지 getUrl()인지 확인 필요)
                 mainImageUrl = cafe.getPhotos().get(0).getImageUrl();
+                log.info("=== 이미지 URL: {}", mainImageUrl);
+            } else {
+                log.warn("=== 카페 ID {} 에 이미지 없음", cafe.getCafeId());
             }
             // ▲▲▲ [여기까지] ▲▲▲
 
@@ -116,6 +124,8 @@ public class MyPageService {
             );
         }).collect(Collectors.toList());
 
+        log.info("=== 최종 응답 데이터: {}", bookmarkList);
+        
         return Map.of(
                 "total_count", bookmarkList.size(),
                 "bookmarks", bookmarkList

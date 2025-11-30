@@ -4,12 +4,21 @@ import com.inu.go_cagong.admin.entity.Bookmark;
 import com.inu.go_cagong.admin.entity.Cafe;
 import com.inu.go_cagong.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     // 특정 유저가 저장한 북마크 리스트 찾기 (마이페이지용)
     List<Bookmark> findAllByUser(User user);
+    
+    // 북마크 목록 조회 with Cafe photos fetch join (성능 최적화)
+    @Query("SELECT DISTINCT b FROM Bookmark b " +
+           "JOIN FETCH b.cafe c " +
+           "LEFT JOIN FETCH c.photos " +
+           "WHERE b.user = :user")
+    List<Bookmark> findAllByUserWithCafePhotos(@Param("user") User user);
 
     // 이미 저장한 카페인지 확인 (저장 버튼 토글용: true/false 반환)
     boolean existsByUserAndCafe(User user, Cafe cafe);
