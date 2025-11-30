@@ -22,7 +22,7 @@ public class ReviewPhoto {
     private Review review;
 
     // S3 이미지 URL
-    @Column(name = "image_url", nullable = false)
+    @Column(name = "image_url", nullable = false, length = 1024)
     private String imageUrl;
 
     // 정렬 순서 (0부터 시작)

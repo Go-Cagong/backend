@@ -30,4 +30,5 @@ public class User {
     // User : Review = 1 : N 관계
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<com.inu.go_cagong.review.entity.Review> reviews = new ArrayList<>();
+
 }

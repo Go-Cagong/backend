@@ -5,10 +5,15 @@ import com.inu.go_cagong.admin.dto.CafeListResponseDto;
 import com.inu.go_cagong.admin.dto.CafeRequestDto;
 import com.inu.go_cagong.admin.entity.Cafe;
 import com.inu.go_cagong.admin.service.CafeService;
+import com.inu.go_cagong.auth.entity.User;
+import com.inu.go_cagong.auth.jwt.CustomUserDetails;
+import com.inu.go_cagong.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +25,7 @@ import java.util.List;
 public class AdminCafeController {
 
     private final CafeService cafeService;
+    private final UserRepository userRepository;
 
     /**
      * 카페 등록 (관리자)
@@ -63,8 +69,31 @@ public class AdminCafeController {
     @GetMapping("/cafe/{id}")
     public ResponseEntity<CafeDetailResponseDto> getCafeDetail(@PathVariable Long id) {
         log.info("카페 상세 조회 요청: ID={}", id);
+        
+        // 현재 로그인한 사용자 정보 가져오기
+        User currentUser = getCurrentUser();
+        
+        // 카페 정보 조회
         Cafe cafe = cafeService.getCafeDetail(id);
-        CafeDetailResponseDto response = CafeDetailResponseDto.from(cafe);
+        
+        // 북마크 여부 확인
+        boolean isBookmarked = cafeService.isBookmarked(id, currentUser);
+        
+        // DTO 로 변환 (북마크 여부 포함)
+        CafeDetailResponseDto response = CafeDetailResponseDto.from(cafe, isBookmarked);
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * 현재 로그인한 사용자 정보 가져오기
+     */
+    private User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+            return null; // 비로그인 사용자
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userId = userDetails.getUserId();
+        return userRepository.findById(userId).orElse(null);
     }
 }

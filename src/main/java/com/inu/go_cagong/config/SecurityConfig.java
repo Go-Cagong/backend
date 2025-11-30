@@ -39,7 +39,8 @@ public class SecurityConfig {
                                 "/api/auth/logout",
                                 "/api/**",
                                 "/admin/**",
-                                "/cafe-api-test.html"
+                                "/cafe-api-test.html",
+                                "/cafe-api-test-new.html"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

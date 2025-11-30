@@ -1,5 +1,6 @@
 package com.inu.go_cagong.auth.jwt;
 
+import com.inu.go_cagong.auth.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,4 +50,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

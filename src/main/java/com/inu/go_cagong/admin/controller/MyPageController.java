@@ -1,4 +1,4 @@
-package com.inu.go_cagong;
+package com.inu.go_cagong.admin.controller;
 
 import com.inu.go_cagong.admin.service.MyPageService;
 import lombok.RequiredArgsConstructor;

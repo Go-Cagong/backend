@@ -32,12 +32,20 @@ public class CafeDetailResponseDto {
     // 이미지 URL 리스트
     private List<String> images;
 
+    // 북마크 여부
+    private Boolean bookmark;
+
     // 리뷰 통계 (나중에 구현)
     private Double reviewAverage;
     private Integer reviewCount;
 
-    // Entity -> DTO 변환
+    // Entity -> DTO 변환 (북마크 없이)
     public static CafeDetailResponseDto from(Cafe cafe) {
+        return from(cafe, false);
+    }
+
+    // Entity -> DTO 변환 (북마크 포함)
+    public static CafeDetailResponseDto from(Cafe cafe, boolean isBookmarked) {
         // CafePhoto에서 imageUrl만 추출
         List<String> imageUrls = cafe.getPhotos().stream()
                 .map(CafePhoto::getImageUrl)
@@ -57,6 +65,7 @@ public class CafeDetailResponseDto {
                 .mood(cafe.getMood())
                 .aiSummary(cafe.getAiSummary())
                 .images(imageUrls)
+                .bookmark(isBookmarked)
                 // TODO: 리뷰 통계는 나중에 Review 테이블 만들면 추가
                 .reviewAverage(0.0)
                 .reviewCount(0)

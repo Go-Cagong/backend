@@ -3,7 +3,9 @@ package com.inu.go_cagong.admin.service;
 import com.inu.go_cagong.admin.dto.CafeRequestDto;
 import com.inu.go_cagong.admin.entity.Cafe;
 import com.inu.go_cagong.admin.entity.CafePhoto;
+import com.inu.go_cagong.admin.repository.BookmarkRepository;
 import com.inu.go_cagong.admin.repository.CafeRepository;
+import com.inu.go_cagong.auth.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.util.List;
 public class CafeService {
 
     private final CafeRepository cafeRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final S3Service s3Service;  // S3 업로드용
 
     /**
@@ -108,5 +111,26 @@ public class CafeService {
         log.info("카페 상세 조회: ID={}", cafeId);
         return cafeRepository.findById(cafeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카페입니다. ID: " + cafeId));
+    }
+
+    /**
+     * 카페 상세 정보 조회 (북마크 여부 포함)
+     */
+    public Cafe getCafeDetailWithBookmark(Long cafeId, User user) {
+        log.info("카페 상세 조회 (북마크 포함): ID={}, userId={}", cafeId, user != null ? user.getId() : "anonymous");
+        return cafeRepository.findById(cafeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카페입니다. ID: " + cafeId));
+    }
+
+    /**
+     * 북마크 여부 확인
+     */
+    public boolean isBookmarked(Long cafeId, User user) {
+        if (user == null) {
+            return false; // 비로그인 사용자는 북마크 없음
+        }
+        Cafe cafe = cafeRepository.findById(cafeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카페입니다. ID: " + cafeId));
+        return bookmarkRepository.existsByUserAndCafe(user, cafe);
     }
 }

@@ -345,6 +345,8 @@
         <button class="tab-button active" onclick="switchTab('cafe')">☕ 카페 관리</button>
         <button class="tab-button" onclick="switchTab('review')">⭐ 리뷰 관리</button>
         <button class="tab-button" onclick="switchTab('myreview')">📝 내 리뷰</button>
+        <button class="tab-button" onclick="switchTab('bookmark')">🔖 북마크</button>
+        <button class="tab-button" onclick="switchTab('mypage')">👤 마이페이지</button>
     </div>
 
     <!-- 카페 관리 탭 -->
@@ -550,6 +552,61 @@
             <div id="myReviewsResponse" class="response" style="display:none;"></div>
         </div>
     </div>
+
+    <!-- 북마크 탭 -->
+    <div id="bookmark-tab" class="tab-content">
+        <!-- 북마크 추가 -->
+        <div class="card">
+            <h2 class="section-title">북마크 추가</h2>
+            <div class="info-box">
+                <strong>🔐 로그인 필요:</strong> 로그인 후 북마크를 추가할 수 있습니다.
+            </div>
+            <div class="form-group">
+                <label>카페 ID</label>
+                <input type="number" id="addBookmarkCafeId" placeholder="북마크할 카페 ID">
+            </div>
+            <button onclick="addBookmark()">북마크 추가</button>
+            <div id="addBookmarkResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- 북마크 삭제 -->
+        <div class="card">
+            <h2 class="section-title">북마크 삭제</h2>
+            <div class="form-group">
+                <label>카페 ID</label>
+                <input type="number" id="deleteBookmarkCafeId" placeholder="북마크 해제할 카페 ID">
+            </div>
+            <button onclick="deleteBookmark()" style="background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);">북마크 삭제</button>
+            <div id="deleteBookmarkResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- 내 북마크 목록 -->
+        <div class="card">
+            <h2 class="section-title">내 북마크 목록</h2>
+            <button onclick="getMyBookmarks()">내 북마크 조회</button>
+            <div id="bookmarkListResponse" class="response" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- 마이페이지 탭 -->
+    <div id="mypage-tab" class="tab-content">
+        <!-- 마이페이지 정보 -->
+        <div class="card">
+            <h2 class="section-title">마이페이지 정보</h2>
+            <div class="info-box">
+                <strong>🔐 로그인 필요:</strong> 로그인 후 내 정보를 확인할 수 있습니다.
+            </div>
+            <button onclick="getMyPageInfo()">마이페이지 조회</button>
+            <div id="mypageResponse" class="response" style="display:none;"></div>
+        </div>
+
+        <!-- 내가 작성한 리뷰 -->
+        <div class="card">
+            <h2 class="section-title">내가 작성한 리뷰</h2>
+            <button onclick="getMyReviewsInMyPage()">내 리뷰 조회</button>
+            <div id="myReviewsInMypageResponse" class="response" style="display:none;"></div>
+        </div>
+    </div>
 </div>
 
 <!-- 이미지 확대 모달 -->
@@ -559,8 +616,8 @@
 </div>
 
 <script>
-    // const API_BASE_URL = 'http://localhost:8080/api';
-    const API_BASE_URL = 'https://go-cagong.ddns.net/api';
+    // 동적으로 현재 호스트 감지
+    const API_BASE_URL = `${window.location.origin}/api`;
 
     let cafeImageFiles = [];
     let reviewImageFiles = [];
@@ -604,22 +661,19 @@
     // 카카오 로그인
     function loginWithKakao() {
         document.cookie = "login_from=web; path=/; max-age=600";
-        // window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
-        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/kakao';
+        window.location.href = `${window.location.origin}/oauth2/authorization/kakao`;
     }
 
     // 구글 로그인
     function loginWithGoogle() {
         document.cookie = "login_from=web; path=/; max-age=600";
-        // window.location.href = 'http://localhost:8080/oauth2/authorization/google';
-        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/google';
+        window.location.href = `${window.location.origin}/oauth2/authorization/google`;
     }
 
     // 네이버 로그인
     function loginWithNaver() {
         document.cookie = "login_from=web; path=/; max-age=600";
-        // window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
-        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/naver';
+        window.location.href = `${window.location.origin}/oauth2/authorization/naver`;
     }
 
 
@@ -1028,6 +1082,145 @@
 
     function closeModal() {
         document.getElementById('imageModal').classList.remove('active');
+    }
+
+    // 북마크 추가
+    async function addBookmark() {
+        const cafeId = document.getElementById('addBookmarkCafeId').value;
+        if (!cafeId) {
+            alert('카페 ID를 입력하세요.');
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/cafes/${cafeId}/bookmark`, {
+                method: 'POST',
+                credentials: 'include'
+            });
+            const data = await response.json();
+            showResponse('addBookmarkResponse', data, !response.ok);
+            
+            if (response.ok) {
+                document.getElementById('addBookmarkCafeId').value = '';
+            }
+        } catch (error) {
+            showResponse('addBookmarkResponse', { error: error.message }, true);
+        }
+    }
+
+    // 북마크 삭제
+    async function deleteBookmark() {
+        const cafeId = document.getElementById('deleteBookmarkCafeId').value;
+        if (!cafeId) {
+            alert('카페 ID를 입력하세요.');
+            return;
+        }
+
+        if (!confirm('정말 북마크를 해제하시겠습니까?')) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/cafes/${cafeId}/bookmark`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+            const data = await response.json();
+            showResponse('deleteBookmarkResponse', data, !response.ok);
+            
+            if (response.ok) {
+                document.getElementById('deleteBookmarkCafeId').value = '';
+            }
+        } catch (error) {
+            showResponse('deleteBookmarkResponse', { error: error.message }, true);
+        }
+    }
+
+    // 내 북마크 목록 조회
+    async function getMyBookmarks() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/bookmarks`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+
+            let html = `
+                <div class="response-title">✅ 내 북마크 (${data.bookmarks ? data.bookmarks.length : 0}개)</div>
+            `;
+
+            if (data.bookmarks && data.bookmarks.length > 0) {
+                data.bookmarks.forEach(cafe => {
+                    html += `
+                        <div class="cafe-card">
+                            <h4>⭐ ${cafe.name || '카페 이름 없음'}</h4>
+                            <p><strong>주소:</strong> ${cafe.address || '주소 없음'}</p>
+                            <p><strong>영업시간:</strong> ${cafe.businessHours || '정보 없음'}</p>
+                            <p><strong>전화:</strong> ${cafe.tel || '없음'}</p>
+                            <p><strong>분위기:</strong> ${cafe.mood || '정보 없음'}</p>
+                            <p><strong>주차:</strong> ${cafe.hasParking ? '가능' : '불가능'}</p>
+                            <p><strong>아메리카노:</strong> ${cafe.americanoPrice}원</p>
+                            <p><small>카페 ID: ${cafe.cafeId}</small></p>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>북마크한 카페가 없습니다.</p>';
+            }
+
+            document.getElementById('bookmarkListResponse').style.display = 'block';
+            document.getElementById('bookmarkListResponse').className = 'response success';
+            document.getElementById('bookmarkListResponse').innerHTML = html;
+        } catch (error) {
+            showResponse('bookmarkListResponse', { error: error.message }, true);
+        }
+    }
+
+    // 마이페이지 정보 조회
+    async function getMyPageInfo() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/mypage`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+            showResponse('mypageResponse', data);
+        } catch (error) {
+            showResponse('mypageResponse', { error: error.message }, true);
+        }
+    }
+
+    // 내 리뷰 조회 (마이페이지용)
+    async function getMyReviewsInMyPage() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/user/reviews`, {
+                credentials: 'include'
+            });
+            const data = await response.json();
+
+            let html = `
+                <div class="response-title">✅ 내 리뷰 (${data.reviews ? data.reviews.length : 0}개)</div>
+            `;
+
+            if (data.reviews && data.reviews.length > 0) {
+                data.reviews.forEach(review => {
+                    const stars = '⭐'.repeat(review.rating || 0);
+                    html += `
+                        <div class="review-card">
+                            <h4>${review.cafeName || '카페 이름 없음'}</h4>
+                            <div class="rating">${stars} ${review.rating}점</div>
+                            <p>${review.content}</p>
+                            <p><small>${new Date(review.createdAt).toLocaleString()}</small></p>
+                            <p><small>리뷰 ID: ${review.reviewId}</small></p>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<p>작성한 리뷰가 없습니다.</p>';
+            }
+
+            document.getElementById('myReviewsInMypageResponse').style.display = 'block';
+            document.getElementById('myReviewsInMypageResponse').className = 'response success';
+            document.getElementById('myReviewsInMypageResponse').innerHTML = html;
+        } catch (error) {
+            showResponse('myReviewsInMypageResponse', { error: error.message }, true);
+        }
     }
 
     // 페이지 로드 시 인증 상태 확인
