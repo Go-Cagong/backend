@@ -1,3 +1,4 @@
+
 package com.inu.go_cagong.review.controller;
 
 import com.inu.go_cagong.auth.jwt.CustomUserDetails;
@@ -36,7 +37,28 @@ public class ReviewController {
             @PathVariable Long cafeId,
             @ModelAttribute ReviewCreateDto dto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        
+
+        /* 수정전
+        Long userId = userDetails.getUserId();
+        log.info("리뷰 작성 요청: cafeId={}, userId={}", cafeId, userId);
+
+        Review review = reviewService.createReview(cafeId, dto, userId);
+        ReviewResponseDto response = ReviewResponseDto.from(review);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "리뷰가 등록되었습니다.");
+        result.put("review", response);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
+
+         */
+        // [수정 1] 로그인 확인 로직 추가
+        if (userDetails == null) {
+            log.warn("리뷰 작성 실패: 로그인 정보 없음");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인이 필요한 서비스입니다."));
+        }
+
         Long userId = userDetails.getUserId();
         log.info("리뷰 작성 요청: cafeId={}, userId={}", cafeId, userId);
 
@@ -71,7 +93,32 @@ public class ReviewController {
     @GetMapping("/review/me")
     public ResponseEntity<Map<String, Object>> getMyReviews(
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        
+
+        /* 이전 2
+        Long userId = userDetails.getUserId();
+        log.info("내 리뷰 조회: userId={}", userId);
+
+        List<Review> reviews = reviewService.getMyReviews(userId);
+        List<ReviewResponseDto> reviewDtos = reviews.stream()
+                .map(ReviewResponseDto::from)
+                .collect(Collectors.toList());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", userId);
+        result.put("userName", userDetails.getUsername());
+        result.put("reviewCount", reviewDtos.size());
+        result.put("reviews", reviewDtos);
+
+        return ResponseEntity.ok(result);
+
+         */
+
+        // [수정 2] 로그인 확인 로직 추가
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인이 필요한 서비스입니다."));
+        }
+
         Long userId = userDetails.getUserId();
         log.info("내 리뷰 조회: userId={}", userId);
 
@@ -98,7 +145,27 @@ public class ReviewController {
             @PathVariable Long reviewId,
             @ModelAttribute ReviewUpdateDto dto,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        
+
+        /* 수정전 3
+        Long userId = userDetails.getUserId();
+        log.info("리뷰 수정 요청: reviewId={}, userId={}", reviewId, userId);
+
+        Review review = reviewService.updateReview(reviewId, dto, userId);
+        ReviewResponseDto response = ReviewResponseDto.from(review);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "리뷰가 수정되었습니다.");
+        result.put("review", response);
+
+        return ResponseEntity.ok(result);
+
+         */
+        // [수정 3] 로그인 확인 로직 추가
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인이 필요한 서비스입니다."));
+        }
+
         Long userId = userDetails.getUserId();
         log.info("리뷰 수정 요청: reviewId={}, userId={}", reviewId, userId);
 
@@ -120,7 +187,26 @@ public class ReviewController {
     public ResponseEntity<Map<String, Object>> deleteReview(
             @PathVariable Long reviewId,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
-        
+
+        /* 수정전 4
+        Long userId = userDetails.getUserId();
+        log.info("리뷰 삭제 요청: reviewId={}, userId={}", reviewId, userId);
+
+        reviewService.deleteReview(reviewId, userId);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("message", "리뷰가 삭제되었습니다.");
+        result.put("reviewId", reviewId);
+
+        return ResponseEntity.ok(result);
+
+         */
+        // [수정 4] 로그인 확인 로직 추가
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("message", "로그인이 필요한 서비스입니다."));
+        }
+
         Long userId = userDetails.getUserId();
         log.info("리뷰 삭제 요청: reviewId={}, userId={}", reviewId, userId);
 

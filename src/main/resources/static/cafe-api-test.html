@@ -559,7 +559,8 @@
 </div>
 
 <script>
-    const API_BASE_URL = 'http://localhost:8080/api';
+    // const API_BASE_URL = 'http://localhost:8080/api';
+    const API_BASE_URL = 'https://go-cagong.ddns.net/api';
 
     let cafeImageFiles = [];
     let reviewImageFiles = [];
@@ -602,17 +603,23 @@
 
     // 카카오 로그인
     function loginWithKakao() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+        document.cookie = "login_from=web; path=/; max-age=600";
+        // window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
+        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/kakao';
     }
 
     // 구글 로그인
     function loginWithGoogle() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        document.cookie = "login_from=web; path=/; max-age=600";
+        // window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/google';
     }
 
     // 네이버 로그인
     function loginWithNaver() {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        document.cookie = "login_from=web; path=/; max-age=600";
+        // window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
+        window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/naver';
     }
 
 
@@ -625,6 +632,10 @@
             credentials: 'include'
         })
             .then(() => {
+                document.cookie = "access_token=; path=/; max-age=0";
+                document.cookie = "refresh_token=; path=/; max-age=0";
+                document.cookie = "JSESSIONID=; path=/; max-age=0";
+
                 alert('로그아웃되었습니다.');
                 checkAuthStatus();
             });
