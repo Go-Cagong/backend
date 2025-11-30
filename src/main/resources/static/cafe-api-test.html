@@ -603,18 +603,21 @@
 
     // 카카오 로그인
     function loginWithKakao() {
+        document.cookie = "login_from=web; path=/; max-age=600";
         // window.location.href = 'http://localhost:8080/oauth2/authorization/kakao';
         window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/kakao';
     }
 
     // 구글 로그인
     function loginWithGoogle() {
+        document.cookie = "login_from=web; path=/; max-age=600";
         // window.location.href = 'http://localhost:8080/oauth2/authorization/google';
         window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/google';
     }
 
     // 네이버 로그인
     function loginWithNaver() {
+        document.cookie = "login_from=web; path=/; max-age=600";
         // window.location.href = 'http://localhost:8080/oauth2/authorization/naver';
         window.location.href = 'https://go-cagong.ddns.net/oauth2/authorization/naver';
     }
