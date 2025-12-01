@@ -28,7 +28,7 @@ public class AuthController {
     @GetMapping("/me")
     public Object me(Authentication authentication) {
         if (authentication == null) {
-            return "UNAUTHORIZED";
+            return "로그인이 필요합니다.";
         }
 
         String email = authentication.getName();

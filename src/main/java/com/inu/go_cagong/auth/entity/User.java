@@ -1,5 +1,6 @@
 package com.inu.go_cagong.auth.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class User {
     private String role;        // USER 등
 
     // User : Review = 1 : N 관계
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<com.inu.go_cagong.review.entity.Review> reviews = new ArrayList<>();
 
