@@ -6,6 +6,7 @@ import com.inu.go_cagong.admin.entity.CafePhoto;
 import com.inu.go_cagong.admin.repository.BookmarkRepository;
 import com.inu.go_cagong.admin.repository.CafeRepository;
 import com.inu.go_cagong.auth.entity.User;
+import com.inu.go_cagong.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class CafeService {
     private final CafeRepository cafeRepository;
     private final BookmarkRepository bookmarkRepository;
     private final S3Service s3Service;  // S3 업로드용
+    private final ReviewRepository reviewRepository;
 
     /**
      * 카페 등록
@@ -132,5 +134,12 @@ public class CafeService {
         Cafe cafe = cafeRepository.findById(cafeId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카페입니다. ID: " + cafeId));
         return bookmarkRepository.existsByUserAndCafe(user, cafe);
+    }
+
+    public Double getAverageRating(Long cafeId) {
+        Cafe cafe = cafeRepository.findById(cafeId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 카페입니다. ID: " + cafeId));
+        Double avgRating = reviewRepository.findAverageRatingByCafe(cafe);
+        return avgRating != null ? avgRating : 0.0;
     }
 }

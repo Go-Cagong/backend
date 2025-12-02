@@ -78,9 +78,10 @@ public class AdminCafeController {
         
         // 북마크 여부 확인
         boolean isBookmarked = cafeService.isBookmarked(id, currentUser);
-        
+        Double averageRating = cafeService.getAverageRating(id);
+
         // DTO 로 변환 (북마크 여부 포함)
-        CafeDetailResponseDto response = CafeDetailResponseDto.from(cafe, isBookmarked);
+        CafeDetailResponseDto response = CafeDetailResponseDto.from(cafe, isBookmarked, averageRating);
         return ResponseEntity.ok(response);
     }
 
